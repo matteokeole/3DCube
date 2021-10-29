@@ -36,7 +36,7 @@ M = {
 		cube.style.transform = transform;
 		shadowFacing(R.y)
 	},
-	up: function() {this.removeEventListener("mousemove", M.move)}
+	up: function() {document.removeEventListener("mousemove", M.move)}
 },
 shadowFacing = function(ry) {
 	// Apply a shadow to the faces
@@ -80,6 +80,6 @@ cube.style["-ms-transform"] = transform;
 cube.style.transform = transform;
 shadowFacing(R.y); // Apply shadow
 // Event listeners
-document.addEventListener("mousedown", M.down);
-document.addEventListener("mouseup", M.up);
+addEventListener("mousedown", M.down);
+addEventListener("mouseup", M.up);
 document.querySelector("#btn-toggle-faces").addEventListener("click", toggleFaces)
