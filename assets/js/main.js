@@ -14,16 +14,29 @@ P = 2, // Smooth motion (higher number = smoother motion)
 // Mouse events
 M = {
 	down: function(e) {
-		R.on.x = -w2 + e.clientX;
+		if (!e.clientX) {
+			// Touch screen
+			R.on.x = -w2 + e.touches[0].clientX;
+			R.on.y = h2 + -e.touches[0].clientY
+		} else {
+			R.on.x = -w2 + e.clientX;
+			R.on.y = h2 + -e.clientY
+		}
 		R.old.x = R.x;
-		R.on.y = h2 + -e.clientY;
 		R.old.y = R.y;
-		document.addEventListener("mousemove", M.move)
+		document.addEventListener("mousemove", M.move);
+		document.addEventListener("touchmove", M.move)
 	},
 	move: function(e) {
-		R.now.x = -w2 + e.clientX;
+		if (!e.clientX) {
+			// Touch screen
+			R.now.x = -w2 + e.touches[0].clientX;
+			R.now.y = h2 + -e.touches[0].clientY
+		} else {
+			R.now.x = -w2 + e.clientX;
+			R.now.y = h2 + -e.clientY
+		}
 		R.x = ((R.now.x - R.on.x) / S) + R.old.x;
-		R.now.y = h2 + -e.clientY;
 		R.y = ((R.now.y - R.on.y) / S) + R.old.y;
 		if (R.x < -360) R.x += 360;
 		if (R.x > 360) R.x -= 360;
@@ -36,7 +49,10 @@ M = {
 		cube.style.transform = transform;
 		shadowFacing(R.y)
 	},
-	up: function() {document.removeEventListener("mousemove", M.move)}
+	up: function() {
+		document.removeEventListener("mousemove", M.move);
+		document.removeEventListener("touchmove", M.move)
+	}
 },
 shadowFacing = function(ry) {
 	// Apply a shadow to the faces
@@ -81,5 +97,7 @@ cube.style.transform = transform;
 shadowFacing(R.y); // Apply shadow
 // Event listeners
 addEventListener("mousedown", M.down);
+addEventListener("touchstart", M.down);
 addEventListener("mouseup", M.up);
+addEventListener("touchend", M.up);
 document.querySelector("#btn-toggle-faces").addEventListener("click", toggleFaces)
